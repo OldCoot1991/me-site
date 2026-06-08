@@ -71,12 +71,14 @@ const works = [
   },
   {
     type: "Лендинг",
-    title: "Страница под запуск услуги",
+    title: "EcoTech07 — сайт регоператора ТКО в КБР",
     description:
-      "Собран первый экран, оффер, блоки преимуществ, прайс, форма заявки и мобильная версия.",
-    stack: ["Дизайн", "Верстка", "Адаптив", "SEO"],
-    result: "быстрый старт продаж",
-    metrics: ["оффер", "форма", "мобайл"]
+      "Официальный веб-сайт для регионального оператора КБР МУП «Экотехпром» (вывоз мусора). Разработана строгая структура разделов, опубликованы тарифы по зонам, документы и реквизиты компании.",
+    stack: ["Next.js", "VPS Server", "SSL / DNS", "Почта домена"],
+    result: "проект успешно запущен",
+    metrics: ["МУП Экотехпром", "вывоз ТКО", "КБР"],
+    link: "https://ecotech07.eco07.ru/",
+    caseUrl: "/works/ecotech"
   },
   {
     type: "Поддержка",
@@ -137,7 +139,10 @@ export default function WorksPage() {
 
         <div className="worksGrid">
           {works.map((work, index) => (
-            <article className="workCard" key={work.title}>
+            <article className={`workCard ${work.caseUrl ? "hasCase" : ""}`} key={work.title}>
+              {work.caseUrl && (
+                <Link href={work.caseUrl} className="caseOverlayLink" aria-label={`Перейти к описанию кейса ${work.title}`} />
+              )}
               <div className="workPreview" aria-hidden="true">
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <div>
@@ -155,7 +160,20 @@ export default function WorksPage() {
                     <span key={tag}>{tag}</span>
                   ))}
                 </div>
-                <strong>{work.result}</strong>
+                <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  {work.caseUrl ? (
+                    <span className="caseLink">
+                      Подробнее о кейсе →
+                    </span>
+                  ) : (
+                    <strong>{work.result}</strong>
+                  )}
+                  {work.link && (
+                    <a href={work.link} target="_blank" rel="noopener noreferrer" className="externalWorkLink">
+                      Открыть сайт ↗
+                    </a>
+                  )}
+                </div>
               </div>
             </article>
           ))}
