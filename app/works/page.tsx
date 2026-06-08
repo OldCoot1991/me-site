@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HeaderControls from "../components/HeaderControls";
 import { region, regionalKeywords } from "../services/data";
 
 export const metadata: Metadata = {
@@ -110,6 +111,7 @@ export default function WorksPage() {
             <Link href="/#support">Сопровождение</Link>
             <Link href="/#contact">Заявка</Link>
           </div>
+          <HeaderControls />
         </nav>
 
         <div className="worksHeroInner">

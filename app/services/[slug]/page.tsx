@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import HeaderControls from "../../components/HeaderControls";
 import { region, regionalKeywords, serviceDetails, serviceDetailsBySlug } from "../data";
 
 type ServicePageProps = {
@@ -115,6 +116,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
             <Link href="/works">Работы</Link>
             <Link href="/#contact">Заявка</Link>
           </div>
+          <HeaderControls />
         </nav>
 
         <div className="serviceHeroInner">

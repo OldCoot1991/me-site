@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HeaderControls from "./components/HeaderControls";
 import { region, serviceGroups } from "./services/data";
 
 const supportPlans = [
@@ -91,6 +92,7 @@ export default function Home() {
             <a href="#support">Сопровождение</a>
             <a href="#contact">Заявка</a>
           </div>
+          <HeaderControls />
         </nav>
 
         <div className="heroGrid">

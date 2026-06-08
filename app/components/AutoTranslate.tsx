@@ -64,8 +64,7 @@ export default function AutoTranslate() {
   }, []);
 
   return (
-    <div className="translateDock" aria-label="Автоматический перевод сайта">
-      <span>Язык</span>
+    <div className="autoTranslateRuntime" aria-hidden="true">
       <div id="google_translate_element" />
       <Script
         src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
