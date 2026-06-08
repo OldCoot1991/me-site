@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import AutoTranslate from "./components/AutoTranslate";
+import TranslationGate from "./components/TranslationGate";
 import { region, regionalKeywords } from "./services/data";
 import "./globals.css";
 
@@ -92,7 +93,7 @@ export default function RootLayout({
   return (
     <html lang="ru" translate="yes">
       <body>
-        {children}
+        <TranslationGate>{children}</TranslationGate>
         <AutoTranslate />
       </body>
     </html>
