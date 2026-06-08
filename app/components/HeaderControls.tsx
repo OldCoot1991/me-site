@@ -62,12 +62,17 @@ function getInitialTheme(): Theme {
 }
 
 export default function HeaderControls() {
-  const [language, setLanguage] = useState(() => getInitialLanguage());
-  const [theme, setTheme] = useState<Theme>(() => getInitialTheme());
+  const [isReady, setIsReady] = useState(false);
+  const [language, setLanguage] = useState("ru");
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
     const id = window.setTimeout(() => {
+      const initialTheme = getInitialTheme();
       setLanguage(getInitialLanguage());
+      setTheme(initialTheme);
+      document.documentElement.dataset.theme = initialTheme;
+      setIsReady(true);
     }, 0);
 
     return () => window.clearTimeout(id);
@@ -88,6 +93,15 @@ export default function HeaderControls() {
     const nextTheme = theme === "dark" ? "light" : "dark";
     setTheme(nextTheme);
     window.localStorage.setItem("theme", nextTheme);
+  }
+
+  if (!isReady) {
+    return (
+      <div className="headerControls" aria-label="Настройки сайта загружаются">
+        <div className="languageSkeleton" aria-hidden="true" />
+        <div className="themeSkeleton" aria-hidden="true" />
+      </div>
+    );
   }
 
   return (

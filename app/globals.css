@@ -121,6 +121,16 @@ main {
       opacity: 0;
     }
   }
+
+  @keyframes skeletonShimmer {
+    from {
+      background-position: 120% 0;
+    }
+
+    to {
+      background-position: -120% 0;
+    }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -322,6 +332,27 @@ main {
 
 .themeToggle[aria-pressed="true"] .moonIcon {
   color: var(--night);
+}
+
+.languageSkeleton,
+.themeSkeleton {
+  height: 46px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent),
+    rgba(255, 255, 255, 0.08);
+  background-size: 220% 100%, auto;
+  animation: skeletonShimmer 1.2s ease-in-out infinite;
+}
+
+.languageSkeleton {
+  width: 154px;
+}
+
+.themeSkeleton {
+  width: 82px;
+  border-radius: 999px;
 }
 
 .heroGrid {
