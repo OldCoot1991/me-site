@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { region, regionalKeywords } from "./services/data";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -6,12 +7,13 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Разработка сайтов, интеграции и техническое сопровождение бизнеса",
+    default: "Разработка сайтов в Нальчике и КБР",
     template: "%s | Цифровая мастерская"
   },
   description:
-    "Создание лендингов, бизнес-сайтов и интернет-магазинов, настройка МойСклад, CRM, оплат, серверов, SEO и техническое сопровождение.",
+    "Разработка сайтов в Нальчике и Кабардино-Балкарской Республике: лендинги, бизнес-сайты, интернет-магазины, МойСклад, CRM, оплаты, серверы, SEO и сопровождение.",
   keywords: [
+    ...regionalKeywords,
     "разработка сайтов",
     "создание сайта",
     "лендинг",
@@ -21,7 +23,10 @@ export const metadata: Metadata = {
     "интеграция CRM",
     "техническое сопровождение сайта",
     "настройка сервера",
-    "SEO настройка сайта"
+    "SEO настройка сайта",
+    "Нальчик",
+    "КБР",
+    "Кабардино-Балкария"
   ],
   authors: [{ name: "Цифровой мастер" }],
   creator: "Цифровой мастер",
@@ -32,16 +37,23 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ru_RU",
     url: "/",
-    title: "Разработка сайтов и автоматизация бизнеса",
+    title: "Разработка сайтов и автоматизация бизнеса в Нальчике",
     description:
-      "Сайты, интернет-магазины, МойСклад, CRM, оплаты, серверы, SEO и поддержка в одном месте.",
+      "Сайты, интернет-магазины, МойСклад, CRM, оплаты, серверы, SEO и поддержка для бизнеса в Нальчике и КБР.",
     siteName: "Цифровая мастерская"
   },
   twitter: {
     card: "summary_large_image",
-    title: "Разработка сайтов и автоматизация бизнеса",
+    title: "Разработка сайтов в Нальчике и КБР",
     description:
-      "Премиальные сайты, интеграции, серверы, SEO и техническое сопровождение."
+      "Сайты, интеграции, серверы, SEO и техническое сопровождение для бизнеса в Нальчике."
+  },
+  other: {
+    "geo.region": region.geoRegion,
+    "geo.placename": `${region.city}, ${region.republic}`,
+    "business:contact_data:locality": region.city,
+    "business:contact_data:region": region.republic,
+    "business:contact_data:country_name": region.country
   },
   robots: {
     index: true,

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { serviceDetails, serviceDetailsBySlug } from "../data";
+import { region, regionalKeywords, serviceDetails, serviceDetailsBySlug } from "../data";
 
 type ServicePageProps = {
   params: Promise<{
@@ -23,16 +23,33 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
     return {};
   }
 
+  const serviceKeywords = [
+    `${service.name} ${region.city}`,
+    `${service.name} ${region.shortRepublic}`,
+    `${service.name} ${region.republic}`,
+    `${service.category} ${region.city}`,
+    ...service.keyBlocks.map((item) => `${item} ${region.city}`),
+    ...regionalKeywords
+  ];
+
   return {
-    title: service.name,
-    description: `${service.name}: ${service.intro} Стоимость ${service.price}.`,
+    title: `${service.name} в Нальчике`,
+    description: `${service.name} в Нальчике и КБР. ${service.intro} Стоимость ${service.price}. Работаю с бизнесом в Кабардино-Балкарской Республике.`,
+    keywords: serviceKeywords,
     alternates: {
       canonical: `/services/${service.slug}`
     },
     openGraph: {
-      title: `${service.name} | Цифровая мастерская`,
-      description: service.intro,
+      title: `${service.name} в Нальчике | Цифровая мастерская`,
+      description: `${service.intro} Основной регион: ${region.city}, ${region.republic}.`,
       url: `/services/${service.slug}`
+    },
+    other: {
+      "geo.region": region.geoRegion,
+      "geo.placename": `${region.city}, ${region.republic}`,
+      "business:contact_data:locality": region.city,
+      "business:contact_data:region": region.republic,
+      "business:contact_data:country_name": region.country
     }
   };
 }
@@ -51,6 +68,27 @@ export default async function ServicePage({ params }: ServicePageProps) {
     name: service.name,
     description: service.intro,
     serviceType: service.category,
+    areaServed: [
+      {
+        "@type": "City",
+        name: region.city
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: region.republic
+      }
+    ],
+    provider: {
+      "@type": "ProfessionalService",
+      name: "Цифровая мастерская",
+      areaServed: `${region.city}, ${region.republic}`,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: region.city,
+        addressRegion: region.republic,
+        addressCountry: "RU"
+      }
+    },
     offers: {
       "@type": "Offer",
       priceCurrency: "RUB",
@@ -83,6 +121,10 @@ export default async function ServicePage({ params }: ServicePageProps) {
           <p className="eyebrow">{service.category}</p>
           <h1>{service.headline}</h1>
           <p className="lead">{service.intro}</p>
+          <p className="serviceRegion">
+            Основной регион выполнения заказов: {region.city}, {region.republic}.
+            Работаю с бизнесом по Нальчику и всей Кабардино-Балкарии.
+          </p>
           <div className="serviceHeroMeta">
             <span>Стоимость</span>
             <strong>{service.price}</strong>

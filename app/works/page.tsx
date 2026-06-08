@@ -1,18 +1,33 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { region, regionalKeywords } from "../services/data";
 
 export const metadata: Metadata = {
-  title: "Наши работы",
+  title: "Наши работы в Нальчике",
   description:
-    "Примеры работ: лендинги, бизнес-сайты, интернет-магазины, интеграции МойСклад, CRM, оплаты, серверы и SEO.",
+    "Примеры работ по разработке сайтов, интернет-магазинов, МойСклад, CRM, оплатам, серверам и SEO для бизнеса в Нальчике и Кабардино-Балкарской Республике.",
+  keywords: [
+    "портфолио разработчика сайтов Нальчик",
+    "примеры сайтов Нальчик",
+    "кейсы разработка сайтов КБР",
+    "работы веб разработчика Нальчик",
+    ...regionalKeywords
+  ],
   alternates: {
     canonical: "/works"
   },
   openGraph: {
-    title: "Наши работы | Цифровая мастерская",
+    title: "Наши работы в Нальчике | Цифровая мастерская",
     description:
-      "Кейсы по сайтам, автоматизации, интеграциям и техническому сопровождению бизнеса.",
+      "Кейсы по сайтам, автоматизации, интеграциям и техническому сопровождению бизнеса в Нальчике и КБР.",
     url: "/works"
+  },
+  other: {
+    "geo.region": region.geoRegion,
+    "geo.placename": `${region.city}, ${region.republic}`,
+    "business:contact_data:locality": region.city,
+    "business:contact_data:region": region.republic,
+    "business:contact_data:country_name": region.country
   }
 };
 

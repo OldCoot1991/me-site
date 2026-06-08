@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { serviceGroups } from "./services/data";
+import { region, serviceGroups } from "./services/data";
 
 const supportPlans = [
   {
@@ -31,8 +31,23 @@ const schema = {
   "@type": "ProfessionalService",
   name: "Цифровая мастерская",
   description:
-    "Разработка сайтов, интернет-магазинов, интеграции МойСклад, CRM, оплаты, серверы, SEO и сопровождение.",
-  areaServed: "RU",
+    "Разработка сайтов, интернет-магазинов, интеграции МойСклад, CRM, оплаты, серверы, SEO и сопровождение в Нальчике и Кабардино-Балкарской Республике.",
+  areaServed: [
+    {
+      "@type": "City",
+      name: region.city
+    },
+    {
+      "@type": "AdministrativeArea",
+      name: region.republic
+    }
+  ],
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: region.city,
+    addressRegion: region.republic,
+    addressCountry: "RU"
+  },
   serviceType: [
     "Разработка сайтов",
     "Интернет-магазины",
@@ -86,6 +101,10 @@ export default function Home() {
               Лендинги, бизнес-сайты, интернет-магазины, «МойСклад», CRM, оплаты,
               серверы, SEO и поддержка. Работаю как мастер: вижу систему целиком,
               чиню слабые места и довожу до результата.
+            </p>
+            <p className="regionNote">
+              Основной регион заказов: {region.city}, {region.republic}. Работаю с
+              бизнесом по Нальчику и всей КБР.
             </p>
             <div className="heroActions">
               <a className="button primary" href="#contact">Обсудить проект</a>
@@ -227,6 +246,7 @@ export default function Home() {
           <p>
             Напишите задачу, текущую ситуацию и желаемый срок. Я помогу выбрать
             правильный объем работ: от лендинга до полноценной автоматизации продаж.
+            Основной регион работы - Нальчик и Кабардино-Балкарская Республика.
           </p>
         </div>
         <form className="contactForm">
