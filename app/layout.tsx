@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import AutoTranslate from "./components/AutoTranslate";
 import { region, regionalKeywords } from "./services/data";
 import "./globals.css";
 
@@ -68,7 +69,17 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0c111d",
+  themeColor: [
+    {
+      media: "(prefers-color-scheme: light)",
+      color: "#f7f7f4"
+    },
+    {
+      media: "(prefers-color-scheme: dark)",
+      color: "#090d16"
+    }
+  ],
+  colorScheme: "light dark",
   width: "device-width",
   initialScale: 1
 };
@@ -79,8 +90,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
-      <body>{children}</body>
+    <html lang="ru" translate="yes">
+      <body>
+        {children}
+        <AutoTranslate />
+      </body>
     </html>
   );
 }
