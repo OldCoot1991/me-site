@@ -14,13 +14,32 @@ const languages = [
 
 type Theme = "light" | "dark";
 
+function isSupportedLanguage(language: string) {
+  return languages.some((item) => item.code === language);
+}
+
 function getCookieLanguage() {
   if (typeof document === "undefined") {
     return "ru";
   }
 
   const match = document.cookie.match(/(?:^|;\s*)googtrans=\/ru\/([^;]+)/);
-  return match?.[1] || "ru";
+  const cookieLanguage = match?.[1] ? decodeURIComponent(match[1]) : "ru";
+  return isSupportedLanguage(cookieLanguage) ? cookieLanguage : "ru";
+}
+
+function getInitialLanguage() {
+  if (typeof window === "undefined") {
+    return "ru";
+  }
+
+  const savedLanguage = window.localStorage.getItem("language");
+
+  if (savedLanguage && isSupportedLanguage(savedLanguage)) {
+    return savedLanguage;
+  }
+
+  return getCookieLanguage();
 }
 
 function setTranslateCookie(language: string) {
@@ -43,8 +62,16 @@ function getInitialTheme(): Theme {
 }
 
 export default function HeaderControls() {
-  const [language, setLanguage] = useState(() => getCookieLanguage());
+  const [language, setLanguage] = useState(() => getInitialLanguage());
   const [theme, setTheme] = useState<Theme>(() => getInitialTheme());
+
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      setLanguage(getInitialLanguage());
+    }, 0);
+
+    return () => window.clearTimeout(id);
+  }, []);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -52,6 +79,7 @@ export default function HeaderControls() {
 
   function handleLanguageChange(nextLanguage: string) {
     setLanguage(nextLanguage);
+    window.localStorage.setItem("language", nextLanguage);
     setTranslateCookie(nextLanguage);
     window.location.reload();
   }
