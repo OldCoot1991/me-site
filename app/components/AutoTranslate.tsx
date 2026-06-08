@@ -43,6 +43,7 @@ export default function AutoTranslate() {
 
     if (shouldTranslate && !wasAutoApplied && !document.cookie.includes("googtrans=")) {
       sessionStorage.setItem("autoTranslateApplied", "true");
+      localStorage.setItem("language", targetLanguage);
       setTranslateCookie(targetLanguage);
       window.location.reload();
     }

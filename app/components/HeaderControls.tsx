@@ -61,21 +61,64 @@ function getInitialTheme(): Theme {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
+function hasGoogleTranslationApplied() {
+  return (
+    document.documentElement.classList.contains("translated-ltr") ||
+    document.documentElement.classList.contains("translated-rtl") ||
+    document.body.classList.contains("translated-ltr") ||
+    document.body.classList.contains("translated-rtl")
+  );
+}
+
+function waitForTranslation(language: string) {
+  if (language === "ru") {
+    return Promise.resolve();
+  }
+
+  return new Promise<void>((resolve) => {
+    const startedAt = Date.now();
+    const minWait = 1200;
+    const maxWait = 3600;
+
+    const interval = window.setInterval(() => {
+      const elapsed = Date.now() - startedAt;
+      const isTranslated = hasGoogleTranslationApplied();
+
+      if ((isTranslated && elapsed >= minWait) || elapsed >= maxWait) {
+        window.clearInterval(interval);
+        resolve();
+      }
+    }, 120);
+  });
+}
+
 export default function HeaderControls() {
   const [isReady, setIsReady] = useState(false);
   const [language, setLanguage] = useState("ru");
   const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
+    let isCancelled = false;
+
     const id = window.setTimeout(() => {
       const initialTheme = getInitialTheme();
-      setLanguage(getInitialLanguage());
+      const initialLanguage = getInitialLanguage();
+
+      setLanguage(initialLanguage);
       setTheme(initialTheme);
       document.documentElement.dataset.theme = initialTheme;
-      setIsReady(true);
+
+      void waitForTranslation(initialLanguage).then(() => {
+        if (!isCancelled) {
+          setIsReady(true);
+        }
+      });
     }, 0);
 
-    return () => window.clearTimeout(id);
+    return () => {
+      isCancelled = true;
+      window.clearTimeout(id);
+    };
   }, []);
 
   useEffect(() => {
