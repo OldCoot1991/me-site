@@ -1,36 +1,7 @@
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
-
-const supportedLanguages = ["ru", "en", "de", "fr", "es", "tr", "ar"];
-
-function isSupportedLanguage(language: string) {
-  return supportedLanguages.includes(language);
-}
-
-function getCookieLanguage() {
-  if (typeof document === "undefined") {
-    return "ru";
-  }
-
-  const match = document.cookie.match(/(?:^|;\s*)googtrans=\/ru\/([^;]+)/);
-  const cookieLanguage = match?.[1] ? decodeURIComponent(match[1]) : "ru";
-  return isSupportedLanguage(cookieLanguage) ? cookieLanguage : "ru";
-}
-
-function getInitialLanguage() {
-  if (typeof window === "undefined") {
-    return "ru";
-  }
-
-  const savedLanguage = window.localStorage.getItem("language");
-
-  if (savedLanguage && isSupportedLanguage(savedLanguage)) {
-    return savedLanguage;
-  }
-
-  return getCookieLanguage();
-}
+import { getSavedLanguage, setDocumentLanguage } from "./language";
 
 function hasGoogleTranslationApplied() {
   return (
@@ -70,10 +41,13 @@ export default function TranslationGate({ children }: { children: ReactNode }) {
     let isCancelled = false;
 
     const id = window.setTimeout(() => {
-      const language = getInitialLanguage();
+      const language = getSavedLanguage();
+
+      setDocumentLanguage(language);
 
       void waitForTranslation(language).then(() => {
         if (!isCancelled) {
+          setDocumentLanguage(language);
           setIsReady(true);
         }
       });

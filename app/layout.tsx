@@ -91,7 +91,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru" translate="yes">
+    <html lang="ru" dir="ltr" translate="yes" suppressHydrationWarning>
       <body>
         <TranslationGate>{children}</TranslationGate>
         <AutoTranslate />

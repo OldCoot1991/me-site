@@ -2,6 +2,13 @@
 
 import Script from "next/script";
 import { useEffect } from "react";
+import {
+  getSavedLanguage,
+  getSupportedLanguage,
+  setDocumentLanguage,
+  setTranslateCookie,
+  supportedLanguages
+} from "./language";
 
 declare global {
   interface Window {
@@ -22,28 +29,19 @@ declare global {
   }
 }
 
-const supportedLanguages = ["ru", "en", "de", "fr", "es", "tr", "ar"];
-
-function getTargetLanguage(language: string) {
-  const shortLanguage = language.toLowerCase().split("-")[0];
-  return supportedLanguages.includes(shortLanguage) ? shortLanguage : "en";
-}
-
-function setTranslateCookie(targetLanguage: string) {
-  const value = `/ru/${targetLanguage}`;
-  document.cookie = `googtrans=${value}; path=/; max-age=31536000; SameSite=Lax`;
-}
-
 export default function AutoTranslate() {
   useEffect(() => {
     const browserLanguage = navigator.language || "ru";
-    const targetLanguage = getTargetLanguage(browserLanguage);
+    const targetLanguage = getSupportedLanguage(browserLanguage, "en");
     const shouldTranslate = targetLanguage !== "ru";
     const wasAutoApplied = sessionStorage.getItem("autoTranslateApplied");
+
+    setDocumentLanguage(getSavedLanguage());
 
     if (shouldTranslate && !wasAutoApplied && !document.cookie.includes("googtrans=")) {
       sessionStorage.setItem("autoTranslateApplied", "true");
       localStorage.setItem("language", targetLanguage);
+      setDocumentLanguage(targetLanguage);
       setTranslateCookie(targetLanguage);
       window.location.reload();
     }

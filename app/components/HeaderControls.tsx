@@ -1,51 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-const languages = [
-  { code: "ru", label: "RU", name: "Русский" },
-  { code: "en", label: "EN", name: "English" },
-  { code: "de", label: "DE", name: "Deutsch" },
-  { code: "fr", label: "FR", name: "Français" },
-  { code: "es", label: "ES", name: "Español" },
-  { code: "tr", label: "TR", name: "Türkçe" },
-  { code: "ar", label: "AR", name: "العربية" }
-];
+import {
+  getSavedLanguage,
+  languages,
+  setDocumentLanguage,
+  setTranslateCookie,
+  type SupportedLanguage
+} from "./language";
 
 type Theme = "light" | "dark";
-
-function isSupportedLanguage(language: string) {
-  return languages.some((item) => item.code === language);
-}
-
-function getCookieLanguage() {
-  if (typeof document === "undefined") {
-    return "ru";
-  }
-
-  const match = document.cookie.match(/(?:^|;\s*)googtrans=\/ru\/([^;]+)/);
-  const cookieLanguage = match?.[1] ? decodeURIComponent(match[1]) : "ru";
-  return isSupportedLanguage(cookieLanguage) ? cookieLanguage : "ru";
-}
-
-function getInitialLanguage() {
-  if (typeof window === "undefined") {
-    return "ru";
-  }
-
-  const savedLanguage = window.localStorage.getItem("language");
-
-  if (savedLanguage && isSupportedLanguage(savedLanguage)) {
-    return savedLanguage;
-  }
-
-  return getCookieLanguage();
-}
-
-function setTranslateCookie(language: string) {
-  const value = `/ru/${language}`;
-  document.cookie = `googtrans=${value}; path=/; max-age=31536000; SameSite=Lax`;
-}
 
 function getInitialTheme(): Theme {
   if (typeof window === "undefined") {
@@ -102,14 +66,16 @@ export default function HeaderControls() {
 
     const id = window.setTimeout(() => {
       const initialTheme = getInitialTheme();
-      const initialLanguage = getInitialLanguage();
+      const initialLanguage = getSavedLanguage();
 
       setLanguage(initialLanguage);
       setTheme(initialTheme);
+      setDocumentLanguage(initialLanguage);
       document.documentElement.dataset.theme = initialTheme;
 
       void waitForTranslation(initialLanguage).then(() => {
         if (!isCancelled) {
+          setDocumentLanguage(initialLanguage);
           setIsReady(true);
         }
       });
@@ -125,8 +91,9 @@ export default function HeaderControls() {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 
-  function handleLanguageChange(nextLanguage: string) {
+  function handleLanguageChange(nextLanguage: SupportedLanguage) {
     setLanguage(nextLanguage);
+    setDocumentLanguage(nextLanguage);
     window.localStorage.setItem("language", nextLanguage);
     setTranslateCookie(nextLanguage);
     window.location.reload();
@@ -155,7 +122,7 @@ export default function HeaderControls() {
           aria-label="Выбор языка"
           className="languageSelect"
           value={language}
-          onChange={(event) => handleLanguageChange(event.target.value)}
+          onChange={(event) => handleLanguageChange(event.target.value as SupportedLanguage)}
         >
           {languages.map((item) => (
             <option key={item.code} value={item.code}>
