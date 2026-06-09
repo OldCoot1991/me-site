@@ -1,0 +1,33 @@
+name: Registry Cleanup
+
+on:
+  schedule:
+    # Запуск каждую ночь в 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Позволяет запустить очистку вручную кнопкой в интерфейсе GitHub
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write # Обязательно для возможности удаления образов
+
+    steps:
+      - name: Delete old image versions
+        uses: dataaxiom/ghcr-cleanup-action@v1
+        with:
+          # Встроенного GITHUB_TOKEN достаточно для текущего репозитория
+          token: ${{ secrets.GITHUB_TOKEN }}
+          owner: oldcoot1991
+          package: me-site
+
+          # Настройки стратегии удаления:
+          # 1. Удалить все образы, у которых нет тегов (битые/промежуточные слои)
+          delete-untagged: true
+
+          # 2. Оставить только 5 последних образов с тегами (остальные удалить)
+          keep-n-tagged: 1
+
+          # Рекомендуется сначала включить dry-run, чтобы проверить, что удалится
+          # Измените на false после первой успешной проверки логов!
+          dry-run: false
