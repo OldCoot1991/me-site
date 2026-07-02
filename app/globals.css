@@ -1250,6 +1250,31 @@ body {
 /* ============================================================
    Image slot (user-fillable placeholder)
    ============================================================ */
+/* Static case placeholder (no upload) */
+.caseCard__ph {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  text-align: center;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--bg-3),
+    var(--bg-3) 11px,
+    var(--bg-2) 11px,
+    var(--bg-2) 22px
+  );
+  color: var(--text-dim);
+}
+.caseCard__ph span {
+  font-family: monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+}
+
 .imageSlot {
   position: relative;
   display: block;

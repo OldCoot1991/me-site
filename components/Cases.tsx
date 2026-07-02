@@ -2,7 +2,6 @@
 
 import { useSite } from "./SiteProvider";
 import { useReveal } from "./useReveal";
-import { ImageSlot } from "./ImageSlot";
 import type { CaseItem } from "@/lib/content";
 
 export function Cases() {
@@ -24,7 +23,7 @@ export function Cases() {
 
         <div className="caseGrid">
           {t.cases.map((c, i) => (
-            <CaseCard key={i} item={c} slotId={`case-${i + 1}`} delay={(i % 3) * 70} />
+            <CaseCard key={i} item={c} delay={(i % 3) * 70} />
           ))}
         </div>
       </div>
@@ -32,13 +31,15 @@ export function Cases() {
   );
 }
 
-function CaseCard({ item, slotId, delay }: { item: CaseItem; slotId: string; delay: number }) {
+function CaseCard({ item, delay }: { item: CaseItem; delay: number }) {
   const ref = useReveal<HTMLDivElement>(delay);
   return (
     <div className="caseCard" ref={ref}>
       <div className="caseCard__media">
         <div className="caseCard__zoom">
-          <ImageSlot storageId={slotId} placeholder={item.ph} />
+          <div className="caseCard__ph">
+            <span>{item.ph}</span>
+          </div>
         </div>
         <span className="caseCard__cat">{item.cat}</span>
       </div>
